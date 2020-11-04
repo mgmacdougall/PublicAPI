@@ -1,6 +1,6 @@
 const testButton = document.getElementById('testbutton');
 const gallery = document.getElementById('gallery');
-
+const userCards = document.getElementsByClassName('card');
 /// Script constants
 const userURL = 'https://randomuser.me/api/?results=12';
 
@@ -42,7 +42,7 @@ function getFilteredUserData(data) {
 	let result = {};
 	result['firstname'] = data.name.first;
 	result['lastname'] = data.name.last;
-	result['image'] = data.picture.medium;
+	result['image'] = data.picture.large;
 	result['email'] = data.email;
 	result['location'] = data.location;
 	result['dateofbirth'] = data.dob.date;
@@ -78,7 +78,7 @@ function createCards(users) {
 
 		let location = document.createElement('p');
 		location.classList.add('card-text', 'cap');
-		location.innerText = `${user.location.city} ${user.location.state}`;
+		location.innerText = `${user.location.city}, ${user.location.state}`;
 
 		cardInfoContainer.append(cardName);
 		cardInfoContainer.append(email);
@@ -91,9 +91,22 @@ function createCards(users) {
 	}
 }
 
+/**
+ * Removes all exisiting cards from the gallery board
+ */
+function removeExistingCards() {
+	if (userCards.length > 0) {
+		for (let card of userCards) {
+			card.remove();
+		}
+	}
+}
+
 /// Event listeners
 //********** TEST BUTTON - REMOVE ME */
 testButton.addEventListener('click', (e) => {
+	removeExistingCards(); // remove existing cards from gallery
+
 	fetch(userURL)
 		.then(checkResponse)
 		.then(JSON)
