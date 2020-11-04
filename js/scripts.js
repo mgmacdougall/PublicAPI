@@ -99,6 +99,5 @@ testButton.addEventListener('click', (e) => {
 		.then(JSON)
 		.then(filterUsers)
 		.then(createCards)
-		.then((v) => console.log(v))
 		.catch((e) => console.log(e));
 });
