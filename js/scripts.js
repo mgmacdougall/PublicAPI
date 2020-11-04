@@ -1,9 +1,10 @@
 const testButton = document.getElementById('testbutton');
 const gallery = document.getElementById('gallery');
 const userCards = document.getElementsByClassName('card');
+const bodyElement = document.getElementsByTagName('body');
 /// Script constants
 const userURL = 'https://randomuser.me/api/?results=12';
-
+let userData = [];
 /**
  * Converts response  to json
  * @param {*} resp the resonse to be converted.
@@ -24,14 +25,19 @@ function checkResponse(response) {
 	}
 }
 
+function setUserId() {
+	return Math.floor(Math.random() * 1000);
+}
+
 /**
  * Filters out the users
  * @param {*} data
  */
 function filterUsers(data) {
-	return data.results.map((person) => {
+	userData = data.results.map((person) => {
 		return getFilteredUserData(person);
 	});
+	return userData;
 }
 
 /**
@@ -40,11 +46,14 @@ function filterUsers(data) {
  */
 function getFilteredUserData(data) {
 	let result = {};
+	result['id'] = setUserId();
 	result['firstname'] = data.name.first;
 	result['lastname'] = data.name.last;
 	result['image'] = data.picture.large;
 	result['email'] = data.email;
 	result['location'] = data.location;
+	result['dateofbirth'] = data.dob.date;
+	result['phone'] = data.phone;
 	result['dateofbirth'] = data.dob.date;
 	return result;
 }
@@ -57,6 +66,7 @@ function createCards(users) {
 	for (let user of users) {
 		let divMainCard = document.createElement('div');
 		divMainCard.className = 'card';
+		divMainCard.id = `${user.id}`;
 
 		let imgContainerDiv = document.createElement('div');
 		imgContainerDiv.className = 'card-img-container';
@@ -88,6 +98,7 @@ function createCards(users) {
 		divMainCard.append(cardInfoContainer);
 
 		gallery.append(divMainCard);
+		addClickEventToCards(divMainCard);
 	}
 }
 
@@ -100,6 +111,88 @@ function removeExistingCards() {
 			card.remove();
 		}
 	}
+}
+
+/**
+ * Creates the modal for the card selected
+ */
+function createModal(id) {
+	// Look up the user in the user data to get info needed for the user
+	let dataForUserModal = userData.filter((user) => user['id'] == id);
+
+	for (let userData of dataForUserModal) {
+		let modalContainer = document.createElement('div');
+		modalContainer.className = 'modal-container';
+
+		let modalDiv = document.createElement('div');
+		modalDiv.className = 'modal';
+
+		let closeButton = document.createElement('button');
+		closeButton.type = 'button';
+		closeButton.id = 'modal-close-btn';
+		closeButton.className = 'modal-close-btn';
+
+		let moodalInfoContainer = document.createElement('div');
+		moodalInfoContainer.className = 'modal-info-container';
+
+		let modalImage = document.createElement('img');
+		modalImage.className = 'modal-img';
+		modalImage.alt = 'profile picture';
+		modalImage.src = `${userData.image}`;
+
+		let modalUserName = document.createElement('h3');
+		modalUserName.id = 'name';
+		modalUserName.classList.add('modal-name', 'cap');
+		modalUserName.innerText = `${userData.firstname} ${userData.lastname}`;
+
+		let modalEmail = document.createElement('p');
+		modalEmail.className = 'modal-text';
+		modalEmail.innerText = `${userData.email}`;
+
+		let modalLocation = document.createElement('p');
+		modalLocation.classList.add('modal-name', 'cap');
+		modalLocation.innerText = `${userData.location.city}`;
+
+		let space = document.createElement('hr');
+
+		let modalPhone = document.createElement('p');
+		modalPhone.className = 'modal-text';
+		modalPhone.innerText = `${userData.phone}`;
+
+		let modalAddress = document.createElement('p');
+		modalAddress.className = 'modal-text';
+		modalAddress.innerText = `${userData.location.street.number}, ${userData.location.street.name}, ${userData.location.city} ${userData.location.state} ${userData.location.postalcode} `;
+
+		let modalBirthday = document.createElement('p');
+		modalBirthday.className = 'modal-text';
+		modalBirthday.innerText = `${userData.dateofbirth}`;
+
+		moodalInfoContainer.append(modalImage);
+		moodalInfoContainer.append(modalUserName);
+		moodalInfoContainer.append(modalEmail);
+		moodalInfoContainer.append(modalLocation);
+		moodalInfoContainer.append(space);
+		moodalInfoContainer.append(modalPhone);
+		moodalInfoContainer.append(modalAddress);
+		moodalInfoContainer.append(modalBirthday);
+		modalDiv.append(moodalInfoContainer);
+		modalDiv.append(closeButton);
+		modalContainer.append(modalDiv);
+
+		document.body.appendChild(modalContainer);
+	}
+}
+
+/**
+ * Adds a click event to the card that launches the modal for the user
+ * @param {*} card
+ */
+function addClickEventToCards(card) {
+	card.addEventListener('click', (e) => {
+		let parentCard = e.target.closest('.card');
+		let searchId = parentCard.id;
+		createModal(searchId);
+	});
 }
 
 /// Event listeners
