@@ -236,8 +236,8 @@ function keyCloseModal() {
 	window.addEventListener('keydown', function _keyAction(e) {
 		if (e.key === 'Escape') {
 			modalContainer.remove();
+			window.removeEventListener('keydown', _keyAction);
 		}
-		window.removeEventListener('keydown', _keyAction);
 	});
 }
 /**
