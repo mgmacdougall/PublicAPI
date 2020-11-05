@@ -202,8 +202,7 @@ function addClickEventToCards(card) {
 }
 
 /// Event listeners
-//********** TEST BUTTON - REMOVE ME */
-testButton.addEventListener('click', (e) => {
+document.addEventListener('DOMContentLoaded', (e) => {
 	removeExistingCards(); // remove existing cards from gallery
 
 	fetch(userURL)
