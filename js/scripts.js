@@ -181,11 +181,33 @@ function createModal(id) {
 		modalDiv.append(moodalInfoContainer);
 		modalDiv.append(closeButton);
 		modalContainer.append(modalDiv);
-
+		createNavBar(modalContainer);
 		document.body.appendChild(modalContainer);
 		closeModal();
 		keyCloseModal();
 	}
+}
+
+// Create next and previous for the modal dialog
+function createNavBar(dialog) {
+	const modalButtonContainer = document.createElement('div');
+	modalButtonContainer.className = 'modal-btn-container';
+
+	let modalPrevButton = document.createElement('button');
+	modalPrevButton.type = 'button';
+	modalPrevButton.id = 'modal-prev';
+	modalPrevButton.classList.add('modal-prev', 'btn');
+	modalPrevButton.innerText = 'Previous';
+
+	let modalNextButton = document.createElement('button');
+	modalNextButton.type = 'button';
+	modalNextButton.id = 'modal-next';
+	modalNextButton.classList.add('modal-next', 'btn');
+	modalNextButton.innerText = 'Next';
+
+	modalButtonContainer.appendChild(modalPrevButton);
+	modalButtonContainer.appendChild(modalNextButton);
+	dialog.append(modalButtonContainer);
 }
 
 /**
