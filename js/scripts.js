@@ -1,7 +1,6 @@
 const testButton = document.getElementById('testbutton');
 const gallery = document.getElementById('gallery');
 const userCards = document.getElementsByClassName('card');
-const bodyElement = document.getElementsByTagName('body');
 /// Script constants
 const userURL = 'https://randomuser.me/api/?results=12';
 let userData = [];
@@ -180,7 +179,14 @@ function createModal(id) {
 		modalContainer.append(modalDiv);
 
 		document.body.appendChild(modalContainer);
+		addClickEventToCloseModal();
 	}
+}
+
+function addClickEventToCloseModal() {
+	const modalButton = document.querySelector('#modal-close-btn');
+	const modalDialog = document.getElementsByClassName('modal-container');
+	modalButton.addEventListener('click', (e) => modalDialog[0].remove());
 }
 
 /**
