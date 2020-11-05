@@ -179,11 +179,11 @@ function createModal(id) {
 		modalContainer.append(modalDiv);
 
 		document.body.appendChild(modalContainer);
-		addClickEventToCloseModal();
+		closeModal();
 	}
 }
 
-function addClickEventToCloseModal() {
+function closeModal() {
 	const modalButton = document.querySelector('#modal-close-btn');
 	const modalDialog = document.getElementsByClassName('modal-container');
 	modalButton.addEventListener('click', (e) => modalDialog[0].remove());
