@@ -1,9 +1,10 @@
-const testButton = document.getElementById('testbutton');
 const gallery = document.getElementById('gallery');
 const userCards = document.getElementsByClassName('card');
+const searchContainer = document.querySelector('.search-container');
+
 /// Script constants
 const userURL = 'https://randomuser.me/api/?results=12';
-let userData = [];
+let userData = []; // user object array
 /**
  * Converts response  to json
  * @param {*} resp the resonse to be converted.
@@ -183,6 +184,28 @@ function createModal(id) {
 	}
 }
 
+function createSearchBar() {
+	let searchForm = document.createElement('form');
+	searchForm.action = '#';
+	searchForm.method = 'GET';
+
+	let searchInput = document.createElement('input');
+	searchInput.type = 'search';
+	searchInput.id = 'search-input';
+	searchInput.className = 'search-input';
+	searchInput.placeholder = 'Search...';
+
+	let submitButton = document.createElement('input');
+	submitButton.type = 'button';
+	submitButton.value = '\u{1F50D}';
+	submitButton.id = 'search-submit';
+	submitButton.className = 'search-submit';
+	searchForm.append(searchInput);
+	searchForm.append(submitButton);
+
+	searchContainer.append(searchForm);
+}
+
 function closeModal() {
 	const modalButton = document.querySelector('#modal-close-btn');
 	const modalDialog = document.getElementsByClassName('modal-container');
@@ -210,5 +233,6 @@ document.addEventListener('DOMContentLoaded', (e) => {
 		.then(JSON)
 		.then(filterUsers)
 		.then(createCards)
+		.then(createSearchBar)
 		.catch((e) => console.log(e));
 });
