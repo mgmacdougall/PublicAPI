@@ -72,6 +72,7 @@ function createCards(users) {
 		imgContainerDiv.className = 'card-img-container';
 
 		let imageHolder = document.createElement('img');
+		imageHolder.className = 'card-img';
 		imageHolder.src = `${user.image}`;
 		imgContainerDiv.append(imageHolder);
 
