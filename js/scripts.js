@@ -196,12 +196,14 @@ function createSearchBar() {
 	searchInput.placeholder = 'Search...';
 
 	let submitButton = document.createElement('input');
-	submitButton.type = 'button';
+	submitButton.type = 'submit';
 	submitButton.value = '\u{1F50D}';
 	submitButton.id = 'search-submit';
 	submitButton.className = 'search-submit';
+
 	searchForm.append(searchInput);
 	searchForm.append(submitButton);
+	addSubmitEventHandlerToSearch(searchForm);
 
 	searchContainer.append(searchForm);
 }
@@ -222,6 +224,41 @@ function addClickEventToCards(card) {
 		let searchId = parentCard.id;
 		createModal(searchId);
 	});
+}
+
+function addSubmitEventHandlerToSearch(value) {
+	value.addEventListener('submit', (e) => {
+		let form = document.getElementById('search-input');
+		let searchValue = form.value;
+		searchUsers(searchValue);
+		e.preventDefault();
+	});
+}
+
+// Search functionality
+function searchUsers(value) {
+	let foundUserId = -1;
+	let resultArray = [];
+	for (let user of userData) {
+		if (`${user.firstname} ${user.lastname}` === value) {
+			foundUserId = user.id;
+			break;
+		}
+	}
+
+	// Now search the existing users usersData for the id
+	for (let user of userData) {
+		if (user.id == foundUserId) {
+			resultArray.push(user);
+			break;
+		}
+	}
+
+	// now display the card
+	if (foundUserId > -1) {
+		removeExistingCards(); // remove existing cards
+		createCards(resultArray);
+	}
 }
 
 /// Event listeners
