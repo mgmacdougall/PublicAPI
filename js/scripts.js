@@ -184,6 +184,7 @@ function createModal(id) {
 
 		document.body.appendChild(modalContainer);
 		closeModal();
+		keyCloseModal();
 	}
 }
 
@@ -196,7 +197,7 @@ function formatDate(longdate) {
 	let month = date.getMonth();
 	let day = date.getDay();
 	let year = date.getYear();
-	let fullDate = `${day}${seperator}${month}${seperator}${year}`;
+	let fullDate = `${day}-${month}-${year}`;
 	return fullDate;
 }
 
@@ -230,6 +231,15 @@ function closeModal() {
 	modalButton.addEventListener('click', (e) => modalDialog[0].remove());
 }
 
+function keyCloseModal() {
+	const modalContainer = document.querySelector('.modal-container');
+	window.addEventListener('keydown', function _keyAction(e) {
+		if (e.key === 'Escape') {
+			modalContainer.remove();
+		}
+		window.removeEventListener('keydown', _keyAction);
+	});
+}
 /**
  * Adds a click event to the card that launches the modal for the user
  * @param {*} card
