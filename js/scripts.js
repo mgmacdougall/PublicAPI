@@ -163,11 +163,11 @@ function createModal(id) {
 
 		let modalAddress = document.createElement('p');
 		modalAddress.className = 'modal-text';
-		modalAddress.innerText = `${userData.location.street.number}, ${userData.location.street.name}, ${userData.location.city} ${userData.location.state} ${userData.location.postalcode} `;
+		modalAddress.innerText = `${userData.location.street.number}, ${userData.location.street.name}, ${userData.location.city} ${userData.location.state} ${userData.location.postcode} `;
 
 		let modalBirthday = document.createElement('p');
 		modalBirthday.className = 'modal-text';
-		modalBirthday.innerText = `${userData.dateofbirth}`;
+		modalBirthday.innerText = `DOB: ${formatDate(userData.dateofbirth, '/')}`;
 
 		moodalInfoContainer.append(modalImage);
 		moodalInfoContainer.append(modalUserName);
@@ -186,6 +186,20 @@ function createModal(id) {
 	}
 }
 
+/**
+ * Returns the date in DD MM YYYY with the specfied delimiter or "-"
+ * Example: formatDate(<date>, "/") will return DD/MM/YYYY
+ * Otherwise the date will be returned as DD-MM-YYYY
+ * @param {*} longdate
+ */
+function formatDate(longdate, seperator = '-') {
+	let date = new Date(longdate);
+	let month = date.getMonth();
+	let day = date.getDay();
+	let year = date.getYear();
+	let fullDate = `${day}${seperator}${month}${seperator}${year}`;
+	return fullDate;
+}
 function createSearchBar() {
 	let searchForm = document.createElement('form');
 	searchForm.action = '#';
@@ -233,6 +247,7 @@ function addSubmitEventHandlerToSearch(value) {
 		let form = document.getElementById('search-input');
 		let searchValue = form.value;
 		searchUsers(searchValue);
+		form.value = ''; // reset the search value
 		e.preventDefault();
 	});
 }
