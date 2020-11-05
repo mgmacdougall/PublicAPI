@@ -34,8 +34,8 @@ function setUserId() {
  * @param {*} data
  */
 function filterUsers(data) {
-	userData = data.results.map((person) => {
-		return getFilteredUserData(person);
+	userData = data.results.map((person, idx) => {
+		return getFilteredUserData(person, idx);
 	});
 	return userData;
 }
@@ -44,9 +44,9 @@ function filterUsers(data) {
  * Pulls off the object values need to create the user information
  * @param {*} data
  */
-function getFilteredUserData(data) {
+function getFilteredUserData(data, id) {
 	let result = {};
-	result['id'] = setUserId();
+	result['id'] = id;
 	result['firstname'] = data.name.first;
 	result['lastname'] = data.name.last;
 	result['image'] = data.picture.large;
@@ -223,6 +223,9 @@ function formatDate(longdate) {
 	return fullDate;
 }
 
+/**
+ * Create the search bar
+ */
 function createSearchBar() {
 	let searchForm = document.createElement('form');
 	searchForm.action = '#';
@@ -247,6 +250,9 @@ function createSearchBar() {
 	searchContainer.append(searchForm);
 }
 
+/**
+ * Close the modal dialog
+ */
 function closeModal() {
 	const modalButton = document.querySelector('#modal-close-btn');
 	const modalDialog = document.getElementsByClassName('modal-container');
@@ -274,6 +280,10 @@ function addClickEventToCards(card) {
 	});
 }
 
+/**
+ * Search event handler
+ * @param {*} value
+ */
 function addSubmitEventHandlerToSearch(value) {
 	value.addEventListener('submit', (e) => {
 		let form = document.getElementById('search-input');
@@ -284,7 +294,10 @@ function addSubmitEventHandlerToSearch(value) {
 	});
 }
 
-// Search functionality
+/**
+ * Search for users names  must be full name only
+ * @param {*} value
+ */
 function searchUsers(value) {
 	let foundUserId = -1;
 	let resultArray = [];
