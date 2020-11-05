@@ -168,7 +168,7 @@ function createModal(id) {
 
 		let modalBirthday = document.createElement('p');
 		modalBirthday.className = 'modal-text';
-		modalBirthday.innerText = `DOB: ${formatDate(userData.dateofbirth, '/')}`;
+		modalBirthday.innerText = `Birthday: ${formatDate(userData.dateofbirth)}`;
 
 		moodalInfoContainer.append(modalImage);
 		moodalInfoContainer.append(modalUserName);
@@ -188,12 +188,10 @@ function createModal(id) {
 }
 
 /**
- * Returns the date in DD MM YYYY with the specfied delimiter or "-"
- * Example: formatDate(<date>, "/") will return DD/MM/YYYY
- * Otherwise the date will be returned as DD-MM-YYYY
+ * Returns the date in d-m-YYYY format (for example: 4-5-1971)
  * @param {*} longdate
  */
-function formatDate(longdate, seperator = '-') {
+function formatDate(longdate) {
 	let date = new Date(longdate);
 	let month = date.getMonth();
 	let day = date.getDay();
