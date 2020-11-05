@@ -108,7 +108,9 @@ function createCards(users) {
 function removeExistingCards() {
 	if (userCards.length > 0) {
 		for (let card of userCards) {
-			card.remove();
+			setTimeout(() => {
+				card.remove();
+			}, 10);
 		}
 	}
 }
