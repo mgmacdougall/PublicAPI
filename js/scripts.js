@@ -200,6 +200,7 @@ function formatDate(longdate, seperator = '-') {
 	let fullDate = `${day}${seperator}${month}${seperator}${year}`;
 	return fullDate;
 }
+
 function createSearchBar() {
 	let searchForm = document.createElement('form');
 	searchForm.action = '#';
