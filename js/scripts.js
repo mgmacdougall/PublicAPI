@@ -5,6 +5,7 @@ const searchContainer = document.querySelector('.search-container');
 /// Script constants
 const userURL = 'https://randomuser.me/api/?results=12';
 let userData = []; // user object array
+
 /**
  * Converts response  to json
  * @param {*} resp the resonse to be converted.
@@ -23,10 +24,6 @@ function checkResponse(response) {
 	} else {
 		return Promise.reject(Error('There was an error connecting.'));
 	}
-}
-
-function setUserId() {
-	return Math.floor(Math.random() * 1000);
 }
 
 /**
@@ -137,6 +134,7 @@ function createModal(id) {
 
 		let moodalInfoContainer = document.createElement('div');
 		moodalInfoContainer.className = 'modal-info-container';
+		moodalInfoContainer.id = `${userData.id}`;
 
 		let modalImage = document.createElement('img');
 		modalImage.className = 'modal-img';
@@ -185,6 +183,8 @@ function createModal(id) {
 		document.body.appendChild(modalContainer);
 		closeModal();
 		keyCloseModal();
+		addNextListener();
+		addPreviousListener();
 	}
 }
 
@@ -208,6 +208,49 @@ function createNavBar(dialog) {
 	modalButtonContainer.appendChild(modalPrevButton);
 	modalButtonContainer.appendChild(modalNextButton);
 	dialog.append(modalButtonContainer);
+}
+
+function addNextListener() {
+	let nextButton = document.querySelector('#modal-next');
+	let totalCards = document.querySelectorAll('.card').length;
+	const container = document.querySelector('.modal-info-container');
+	let currentUserId = parseInt(container.id);
+	if (totalCards > 1 && currentUserId !== userData.length - 1) {
+		nextButton.addEventListener('click', function handler(e) {
+			const container = document.querySelector('.modal-info-container');
+			let currentUserId = parseInt(container.id);
+			removeCurrentModal(e);
+			createModal((currentUserId += 1));
+		});
+	} else {
+		disableButton(nextButton);
+	}
+}
+
+function addPreviousListener() {
+	let prevButton = document.querySelector('#modal-prev');
+	let totalCards = document.querySelectorAll('.card').length;
+	const container = document.querySelector('.modal-info-container');
+	let currentUserId = parseInt(container.id);
+	if (totalCards > 1 && currentUserId !== 0) {
+		prevButton.addEventListener('click', function handler(e) {
+			removeCurrentModal(e);
+			createModal((currentUserId -= 1));
+		});
+	} else {
+		disableButton(prevButton);
+	}
+}
+
+function disableButton(button) {
+	button.className = 'btn-disabled';
+	button.disabled = 'true';
+	button.style['pointer-events'] = 'none';
+}
+
+// remove current modal container
+function removeCurrentModal(element) {
+	element.target.parentElement.parentElement.remove();
 }
 
 /**
@@ -268,6 +311,7 @@ function keyCloseModal() {
 		}
 	});
 }
+
 /**
  * Adds a click event to the card that launches the modal for the user
  * @param {*} card
@@ -300,7 +344,7 @@ function addSubmitEventHandlerToSearch(value) {
  */
 function searchUsers(value) {
 	let foundUserId = -1;
-	let resultArray = [];
+	resultArray = [];
 	for (let user of userData) {
 		if (`${user.firstname} ${user.lastname}` === value) {
 			foundUserId = user.id;
