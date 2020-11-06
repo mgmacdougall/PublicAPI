@@ -103,8 +103,10 @@ function createCards(users) {
  * Removes all exisiting cards from the gallery board
  */
 function removeExistingCards() {
-	if (userCards.length > 0) {
-		card.remove();
+	for (let card of userCards) {
+		setTimeout(() => {
+			card.remove();
+		}, 10);
 	}
 }
 
