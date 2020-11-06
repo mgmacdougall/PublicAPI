@@ -51,7 +51,6 @@ function getFilteredUserData(data, id) {
 	result['location'] = data.location;
 	result['dateofbirth'] = data.dob.date;
 	result['phone'] = data.phone;
-	result['dateofbirth'] = data.dob.date;
 	return result;
 }
 
@@ -260,12 +259,8 @@ function removeCurrentModal(element) {
  * @param {*} longdate
  */
 function formatDate(longdate) {
-	let date = new Date(longdate);
-	let month = date.getMonth();
-	let day = date.getDay();
-	let year = date.getYear();
-	let fullDate = `${day}-${month}-${year}`;
-	return fullDate;
+	let date = new Date(longdate).toISOString().split('T')[0];
+	return date;
 }
 
 /**
