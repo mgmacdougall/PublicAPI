@@ -105,11 +105,7 @@ function createCards(users) {
  */
 function removeExistingCards() {
 	if (userCards.length > 0) {
-		for (let card of userCards) {
-			setTimeout(() => {
-				card.remove();
-			}, 10);
-		}
+		card.remove();
 	}
 }
 
@@ -210,6 +206,7 @@ function createNavBar(dialog) {
 	dialog.append(modalButtonContainer);
 }
 
+// Next button listener
 function addNextListener() {
 	let nextButton = document.querySelector('#modal-next');
 	let totalCards = document.querySelectorAll('.card').length;
@@ -227,6 +224,7 @@ function addNextListener() {
 	}
 }
 
+// Previousbutton listener
 function addPreviousListener() {
 	let prevButton = document.querySelector('#modal-prev');
 	let totalCards = document.querySelectorAll('.card').length;
@@ -242,6 +240,10 @@ function addPreviousListener() {
 	}
 }
 
+/**
+ * Disables the given button
+ * @param {*} button
+ */
 function disableButton(button) {
 	button.className = 'btn-disabled';
 	button.disabled = 'true';
