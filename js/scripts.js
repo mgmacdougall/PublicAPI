@@ -341,36 +341,21 @@ function addSubmitEventHandlerToSearch(value) {
  * @param {*} value
  */
 function searchUsers(value) {
-	let foundAUserId = false;
-	resultArray = [];
-	let searchResults = new Map();
+	let foundUserId = -1;
+	let resultArray = [];
 
-	// found match right away no other work needed
-	if (foundAUserId === false) {
-		for (let user of userData) {
-			if (`${user.firstname} ${user.lastname}` === value) {
-				foundAUserId = true;
-				searchResults.set(user.id, user);
-				break;
-			}
-		}
-	}
-
-	// Partial matching required
-	if (foundAUserId === false) {
-		for (let user of userData) {
-			let userName = `${user.firstname} ${user.lastname}`;
-			if (userName.includes(value)) {
-				foundAUserId = true;
-				searchResults.set(user.id, user);
-			}
+	for (let user of userData) {
+		if (`${user.firstname} ${user.lastname}` === value) {
+			foundUserId = user.id;
+			resultArray.push(user);
+			break;
 		}
 	}
 
 	// Display card(s)
-	if (foundAUserId) {
+	if (foundUserId > -1) {
 		removeExistingCards(); // remove existing cards
-		createCards([...searchResults.values()]); // convert the map to an array
+		createCards(resultArray); // convert the map to an array
 	}
 }
 
