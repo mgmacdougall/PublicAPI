@@ -310,12 +310,15 @@ function createSearchBar() {
 	searchContainer.append(searchForm);
 }
 
+/**
+ * Resets the search results
+ * @param {*} val
+ */
 function addResetEventListenerToSearch(val) {
 	val.addEventListener('reset', (e) => {
-		let resetButton = document.getElementById('reset'); // finds the reset button
 		removeExistingCards();
 		createCards(userData);
-		disableButton(resetButton);
+		disableButton(e.target);
 	});
 }
 /**
