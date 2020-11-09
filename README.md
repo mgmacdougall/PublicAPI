@@ -35,8 +35,8 @@ Exceeds Expectations:
 - the last user will have their Next button disabled by default.
 
 3. CSS changes:
-
-- background color changed to Orange
-- new class for disabled button has been added. Disabled buttons have their mouse over,
-  click action, and the opacity for the button provides a visual clue that the button cannot be clicked.
-- the font has been changed Google font `family=Nunito`. These have been included using the Google fonts CDN.
+- Changed the font to use the Google font style Roboto 
+- Added a hover effect to the cards using box-shadowing
+- Reduced the opacity of the text in the modal paragraphs  (more for styling purposes)
+- Added a black border to the cards to provide more umph
+- Color palette to use a grey background for the header and a light grey on the body section.
