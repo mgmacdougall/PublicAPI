@@ -1,7 +1,6 @@
 const gallery = document.getElementById('gallery');
 const userCards = document.getElementsByClassName('card');
 const searchContainer = document.querySelector('.search-container');
-
 /// Script constants
 const userURL = 'https://randomuser.me/api/?results=12';
 let userData = []; // user object array
@@ -246,9 +245,19 @@ function addPreviousListener() {
  * @param {*} button
  */
 function disableButton(button) {
-	button.className = 'btn-disabled';
+	button.classList.add('btn-disabled');
 	button.disabled = 'true';
 	button.style['pointer-events'] = 'none';
+}
+
+/**
+ * Enables the given  button
+ * @param {*} button
+ */
+function enableButton(button) {
+	button.classList.remove('btn-disabled');
+	button.disabled = '';
+	button.style['pointer-events'] = '';
 }
 
 // remove current modal container
@@ -279,6 +288,14 @@ function createSearchBar() {
 	searchInput.className = 'search-input';
 	searchInput.placeholder = 'Search...';
 
+	let resetButton = document.createElement('input');
+	resetButton.type = 'reset';
+	resetButton.innerText = 'Clear';
+	resetButton.disabled = 'true';
+	resetButton.style['pointer-events'] = 'none';
+	resetButton.id = 'reset';
+	resetButton.classList.add('search-submit', 'btn-disabled');
+
 	let submitButton = document.createElement('input');
 	submitButton.type = 'submit';
 	submitButton.value = '\u{1F50D}';
@@ -287,11 +304,20 @@ function createSearchBar() {
 
 	searchForm.append(searchInput);
 	searchForm.append(submitButton);
+	searchForm.append(resetButton);
+	addResetEventListenerToSearch(searchForm);
 	addSubmitEventHandlerToSearch(searchForm);
-
 	searchContainer.append(searchForm);
 }
 
+function addResetEventListenerToSearch(val) {
+	val.addEventListener('reset', (e) => {
+		let resetButton = document.getElementById('reset'); // finds the reset button
+		removeExistingCards();
+		createCards(userData);
+		disableButton(resetButton);
+	});
+}
 /**
  * Close the modal dialog
  */
@@ -344,6 +370,8 @@ function addSubmitEventHandlerToSearch(value) {
 function searchUsers(value) {
 	let foundUserId = -1;
 	resultArray = [];
+	let resetButton = document.getElementById('reset'); // finds the reset button
+
 	for (let user of userData) {
 		if (`${user.firstname} ${user.lastname}` === value) {
 			foundUserId = user.id;
@@ -363,6 +391,7 @@ function searchUsers(value) {
 	if (foundUserId > -1) {
 		removeExistingCards(); // remove existing cards
 		createCards(resultArray);
+		enableButton(resetButton); // because we found an item - enable reset button
 	}
 }
 
