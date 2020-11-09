@@ -250,16 +250,6 @@ function disableButton(button) {
 	button.style['pointer-events'] = 'none';
 }
 
-/**
- * Enables the given  button
- * @param {*} button
- */
-function enableButton(button) {
-	button.classList.remove('btn-disabled');
-	button.disabled = '';
-	button.style['pointer-events'] = '';
-}
-
 // remove current modal container
 function removeCurrentModal(element) {
 	element.target.parentElement.parentElement.remove();
@@ -288,14 +278,6 @@ function createSearchBar() {
 	searchInput.className = 'search-input';
 	searchInput.placeholder = 'Search...';
 
-	let resetButton = document.createElement('input');
-	resetButton.type = 'reset';
-	resetButton.innerText = 'Clear';
-	resetButton.disabled = 'true';
-	resetButton.style['pointer-events'] = 'none';
-	resetButton.id = 'reset';
-	resetButton.classList.add('search-submit', 'btn-disabled');
-
 	let submitButton = document.createElement('input');
 	submitButton.type = 'submit';
 	submitButton.value = '\u{1F50D}';
@@ -304,23 +286,11 @@ function createSearchBar() {
 
 	searchForm.append(searchInput);
 	searchForm.append(submitButton);
-	searchForm.append(resetButton);
-	addResetEventListenerToSearch(searchForm);
+
 	addSubmitEventHandlerToSearch(searchForm);
 	searchContainer.append(searchForm);
 }
 
-/**
- * Resets the search results
- * @param {*} val
- */
-function addResetEventListenerToSearch(val) {
-	val.addEventListener('reset', (e) => {
-		removeExistingCards();
-		createCards(userData);
-		disableButton(e.target);
-	});
-}
 /**
  * Close the modal dialog
  */
@@ -361,7 +331,7 @@ function addSubmitEventHandlerToSearch(value) {
 		let form = document.getElementById('search-input');
 		let searchValue = form.value;
 		searchUsers(searchValue);
-		form.value = ''; // reset the search value
+		form.value = '';
 		e.preventDefault();
 	});
 }
@@ -371,30 +341,36 @@ function addSubmitEventHandlerToSearch(value) {
  * @param {*} value
  */
 function searchUsers(value) {
-	let foundUserId = -1;
+	let foundAUserId = false;
 	resultArray = [];
-	let resetButton = document.getElementById('reset'); // finds the reset button
+	let searchResults = new Map();
 
-	for (let user of userData) {
-		if (`${user.firstname} ${user.lastname}` === value) {
-			foundUserId = user.id;
-			break;
+	// found match right away no other work needed
+	if (foundAUserId === false) {
+		for (let user of userData) {
+			if (`${user.firstname} ${user.lastname}` === value) {
+				foundAUserId = true;
+				searchResults.set(user.id, user);
+				break;
+			}
 		}
 	}
 
-	// Now search the existing users usersData for the id
-	for (let user of userData) {
-		if (user.id == foundUserId) {
-			resultArray.push(user);
-			break;
+	// Partial matching required
+	if (foundAUserId === false) {
+		for (let user of userData) {
+			let userName = `${user.firstname} ${user.lastname}`;
+			if (userName.includes(value)) {
+				foundAUserId = true;
+				searchResults.set(user.id, user);
+			}
 		}
 	}
 
-	// now display the card
-	if (foundUserId > -1) {
+	// Display card(s)
+	if (foundAUserId) {
 		removeExistingCards(); // remove existing cards
-		createCards(resultArray);
-		enableButton(resetButton); // because we found an item - enable reset button
+		createCards([...searchResults.values()]); // convert the map to an array
 	}
 }
 
