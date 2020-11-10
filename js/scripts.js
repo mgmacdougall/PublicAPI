@@ -1,6 +1,7 @@
 const gallery = document.getElementById('gallery');
 const userCards = document.getElementsByClassName('card');
 const searchContainer = document.querySelector('.search-container');
+
 /// Script constants
 const userURL = 'https://randomuser.me/api/?results=12';
 let userData = []; // user object array
@@ -209,15 +210,17 @@ function createNavBar(dialog) {
 // Next button listener
 function addNextListener() {
 	let nextButton = document.querySelector('#modal-next');
-	let totalCards = document.querySelectorAll('.card').length;
-	const container = document.querySelector('.modal-info-container');
-	let currentUserId = parseInt(container.id);
-	if (totalCards > 1 && currentUserId !== userData.length - 1) {
-		nextButton.addEventListener('click', function handler(e) {
-			const container = document.querySelector('.modal-info-container');
-			let currentUserId = parseInt(container.id);
+	let totalVisibleCards = [...document.querySelectorAll('div.card:not(.hidden)')];
+	let currentVisibeName = document.querySelector('.modal-info-container h3').innerText;
+
+	let idxInView = totalVisibleCards.findIndex((card) => card.querySelector('h3').innerText === currentVisibeName);
+	let nextCard = (idxInView += 1);
+
+	if (idxInView > -1 && idxInView < totalVisibleCards.length) {
+		nextButton.addEventListener('click', (e) => {
+			let nextCardIdx = totalVisibleCards[nextCard].id;
 			removeCurrentModal(e);
-			createModal((currentUserId += 1));
+			createModal(nextCardIdx);
 		});
 	} else {
 		disableButton(nextButton);
@@ -226,17 +229,21 @@ function addNextListener() {
 
 // Previousbutton listener
 function addPreviousListener() {
-	let prevButton = document.querySelector('#modal-prev');
-	let totalCards = document.querySelectorAll('.card').length;
-	const container = document.querySelector('.modal-info-container');
-	let currentUserId = parseInt(container.id);
-	if (totalCards > 1 && currentUserId !== 0) {
-		prevButton.addEventListener('click', function handler(e) {
+	let previousButton = document.querySelector('#modal-prev');
+	let totalVisibleCards = [...document.querySelectorAll('div.card:not(.hidden)')];
+	let currentVisibeName = document.querySelector('.modal-info-container h3').innerText;
+
+	let idxInView = totalVisibleCards.findIndex((card) => card.querySelector('h3').innerText === currentVisibeName);
+	let previousCard = (idxInView -= 1);
+
+	if (idxInView >= 0) {
+		previousButton.addEventListener('click', (e) => {
+			let previousCardIdx = totalVisibleCards[previousCard].id;
 			removeCurrentModal(e);
-			createModal((currentUserId -= 1));
+			createModal(previousCardIdx);
 		});
 	} else {
-		disableButton(prevButton);
+		disableButton(previousButton);
 	}
 }
 
@@ -284,10 +291,18 @@ function createSearchBar() {
 	submitButton.id = 'search-submit';
 	submitButton.className = 'search-submit';
 
+	let resetButton = document.createElement('input');
+	resetButton.type = 'reset';
+	resetButton.value = 'Reset';
+	resetButton.id = 'reset-search';
+	resetButton.className = 'search-submit';
+
 	searchForm.append(searchInput);
 	searchForm.append(submitButton);
+	searchForm.append(resetButton);
 
 	addSubmitEventHandlerToSearch(searchForm);
+	addResetEventHandlerToSearch(searchForm);
 	searchContainer.append(searchForm);
 }
 
@@ -336,27 +351,46 @@ function addSubmitEventHandlerToSearch(value) {
 	});
 }
 
+function addResetEventHandlerToSearch(value) {
+	value.addEventListener('reset', (e) => {
+		unHideUser();
+	});
+}
+
+function hideUsers(userCards) {
+	let cards = [...document.getElementsByClassName('card')];
+	for (user of userCards) {
+		let idx = parseInt(user.id);
+		cards[idx].classList.add('hidden');
+	}
+}
+
+function unHideUser() {
+	let cards = [...document.querySelectorAll('.hidden')];
+	cards.forEach((card) => {
+		card.classList.remove('hidden');
+	});
+}
+
 /**
  * Search for users names  must be full name only
  * @param {*} value
  */
 function searchUsers(value) {
 	let foundUserId = -1;
-	let resultArray = [];
+	let usersToDisplay = []; // array of found users
+	let usersToHide = []; // array of
 
 	for (let user of userData) {
-		if (`${user.firstname} ${user.lastname}` === value) {
+		if (`${user.firstname} ${user.lastname}`.includes(value)) {
 			foundUserId = user.id;
-			resultArray.push(user);
-			break;
+			usersToDisplay.push(user);
+		} else {
+			usersToHide.push(user);
 		}
 	}
 
-	// Display card(s)
-	if (foundUserId > -1) {
-		removeExistingCards(); // remove existing cards
-		createCards(resultArray); // convert the map to an array
-	}
+	hideUsers(usersToHide);
 }
 
 /// Event listeners
