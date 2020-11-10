@@ -227,7 +227,7 @@ function addNextListener() {
 	}
 }
 
-// Previousbutton listener
+// Previous button listener
 function addPreviousListener() {
 	let previousButton = document.querySelector('#modal-prev');
 	let totalVisibleCards = [...document.querySelectorAll('div.card:not(.hidden)')];
@@ -351,12 +351,20 @@ function addSubmitEventHandlerToSearch(value) {
 	});
 }
 
+/**
+ * Responsible for resetting the search results back to all users
+ * @param {*} value
+ */
 function addResetEventHandlerToSearch(value) {
 	value.addEventListener('reset', (e) => {
 		unHideUser();
 	});
 }
 
+/**
+ * Hides the array of users passed in
+ * @param {*} userCards
+ */
 function hideUsers(userCards) {
 	let cards = [...document.getElementsByClassName('card')];
 	for (user of userCards) {
@@ -365,6 +373,9 @@ function hideUsers(userCards) {
 	}
 }
 
+/**
+ * Changes all cards to visible
+ */
 function unHideUser() {
 	let cards = [...document.querySelectorAll('.hidden')];
 	cards.forEach((card) => {
@@ -393,7 +404,9 @@ function searchUsers(value) {
 	hideUsers(usersToHide);
 }
 
-/// Event listeners
+/**
+ * Main fetch event listener for the application
+ */
 document.addEventListener('DOMContentLoaded', (e) => {
 	removeExistingCards(); // remove existing cards from gallery
 
