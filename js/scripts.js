@@ -100,17 +100,6 @@ function createCards(users) {
 }
 
 /**
- * Removes all exisiting cards from the gallery board
- */
-function removeExistingCards() {
-	for (let card of userCards) {
-		setTimeout(() => {
-			card.remove();
-		}, 10);
-	}
-}
-
-/**
  * Creates the modal for the card selected
  */
 function createModal(id) {
@@ -211,9 +200,9 @@ function createNavBar(dialog) {
 function addNextListener() {
 	let nextButton = document.querySelector('#modal-next');
 	let totalVisibleCards = [...document.querySelectorAll('div.card:not(.hidden)')];
-	let currentVisibeName = document.querySelector('.modal-info-container h3').innerText;
+	let currentVisibleName = document.querySelector('.modal-info-container h3').innerText;
 
-	let idxInView = totalVisibleCards.findIndex((card) => card.querySelector('h3').innerText === currentVisibeName);
+	let idxInView = totalVisibleCards.findIndex((card) => card.querySelector('h3').innerText === currentVisibleName);
 	let nextCard = (idxInView += 1);
 
 	if (idxInView > -1 && idxInView < totalVisibleCards.length) {
@@ -405,16 +394,22 @@ function searchUsers(value) {
 }
 
 /**
+ * Display an error message to the console
+ * @param {*} err
+ */
+function displayErrorMsg(err) {
+	console.log(Error(err));
+}
+
+/**
  * Main fetch event listener for the application
  */
 document.addEventListener('DOMContentLoaded', (e) => {
-	removeExistingCards(); // remove existing cards from gallery
-
 	fetch(userURL)
 		.then(checkResponse)
 		.then(JSON)
 		.then(filterUsers)
 		.then(createCards)
 		.then(createSearchBar)
-		.catch((e) => console.log(e));
+		.catch(displayErrorMsg);
 });
